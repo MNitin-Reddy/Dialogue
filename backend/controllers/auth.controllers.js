@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
 
-//test
+
 export const login = async (req,res) =>{
     try {
         console.log("login started");
