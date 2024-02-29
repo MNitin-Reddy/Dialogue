@@ -1,70 +1,69 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { getReceiverSocketId, io } from "../socket/socket.js";
 
-export const sendMessage = async (req,res)=>{
-    console.log("message sent",req.params.id); //in route we gave :id so here its .id if there it is :userid here it should be .userid
-    try {
-        const {message} = req.body;
-        const {id: receiverId} = req.params;    //from params we get receiverId renamed from id, destructered here can write req.params.id
-        const senderId = req.user._id;  //user object from protectRoute
+export const sendMessage = async (req, res) => {
+	try {
+		const { message } = req.body;
+		const { id: receiverId } = req.params;
+		const senderId = req.user._id;
 
-        let conversation = await Conversation.findOne({
-            participants: {$all: [senderId, receiverId]}  //all is mongoose syntax- this line gives all the convo these two had
+		let conversation = await Conversation.findOne({
+			participants: { $all: [senderId, receiverId] },
+		});
 
-        });
-        //maybe first time convo so we create one
-        if(!conversation){
-            conversation = await Conversation.create({
-                participants: [senderId, receiverId]
-                //messages is set deafault as empty so no need to mention it here
-            });
-        }
-        //lets create a msg thats coming from the user
-        const newMessage  = new Message({
-            senderId,
-            receiverId,
-            message,
-        });
+		if (!conversation) {
+			conversation = await Conversation.create({
+				participants: [senderId, receiverId],
+			});
+		}
 
-        if(newMessage){
-            conversation.messages.push(newMessage._id);
-        }
-        //SOCKET IO for realtime here
+		const newMessage = new Message({
+			senderId,
+			receiverId,
+			message,
+		});
 
+		if (newMessage) {
+			conversation.messages.push(newMessage._id);
+		}
 
-        //await conversation.save();
-        //await newMessage.save();
-        //optimising these two lines
+		// await conversation.save();
+		// await newMessage.save();
 
-        //This will run in parallel
-        await Promise.all([conversation.save(), newMessage.save()]);
+		// Better implementation of above two lines
+		await Promise.all([conversation.save(), newMessage.save()]);
 
+		// SOCKET IO FUNCTIONALITY WILL GO HERE
+		const receiverSocketId = getReceiverSocketId(receiverId);
+		if (receiverSocketId) {
+			// io.to(<socket_id>).emit() used to send events to specific client
+			io.to(receiverSocketId).emit("newMessage", newMessage);
+		}
 
+		res.status(201).json(newMessage);
+	} catch (error) {
+		console.log("Error in sendMessage controller: ", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
 
-        res.status(201).json(newMessage);
+export const getMessages = async (req, res) => {
+	try {
+		const { id: userToChatId } = req.params;
+		const senderId = req.user._id;
 
-        } catch (error) {
-        console.log("Error at message controller");
-        res.status(500).json({error:"Internal Error"});
-    }
-}
+		const conversation = await Conversation.findOne({
+			participants: { $all: [senderId, userToChatId] },
+		}).populate("messages"); // NOT REFERENCE BUT ACTUAL MESSAGES
 
+		if (!conversation) return res.status(200).json([]);
 
-export const getMessages = async(req,res)=>{
-    try {
-        
-        const {id: userToChatId} = req.params;
-        const senderId = req.user._id;
+		const messages = conversation.messages;
 
-        const conversation = await Conversation.findOne({
-            participants: {$all: [senderId, userToChatId]}
-        }).populate("messages"); //not reference but actual messages
-
-        if(!conversation) return res.status(200).json([]);
-
-        res.status(200).json(conversation.messages);
-    } catch (error) {
-        console.log("Error at get message controller");
-        res.status(500).json({error:"Internal Error"});
-    }
-}
+		res.status(200).json(messages);
+	} catch (error) {
+		console.log("Error in getMessages controller: ", error.message);
+		res.status(500).json({ error: "Internal server error" });
+	}
+};
