@@ -1,12 +1,12 @@
 Tech Stack:
 
-MongoDB: For scalable and flexible data storage.
-Express.js: For building a robust and efficient backend.
-React: For a dynamic and responsive user interface.
-Node.js: For server-side scripting and handling asynchronous tasks.
-Socket.io: Enabling real-time, bidirectional, and event-based communication.
-TailwindCSS: Crafting a visually appealing and responsive design.
-Daisy UI: Enhancing UI components for an aesthetically pleasing user experience.
+ - MongoDB: For scalable and flexible data storage.
+ - Express.js: For building a robust and efficient backend.
+ - React: For a dynamic and responsive user interface.
+ - Node.js: For server-side scripting and handling asynchronous tasks.
+ - Socket.io: Enabling real-time, bidirectional, and event-based communication.
+ - TailwindCSS: Crafting a visually appealing and responsive design.
+ - Daisy UI: Enhancing UI components for an aesthetically pleasing user experience.
 
 
 Key Features:
