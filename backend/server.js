@@ -1,3 +1,4 @@
+import path from "path";
 import express from "express";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
@@ -14,6 +15,8 @@ dotenv.config();
 
 const port= process.env.PORT || 4000;
 
+const __dirname = path.resolve();
+
 app.use(express.json()); // To get values from req.body in controller.js
 app.use(cookieParser());
 
@@ -21,6 +24,11 @@ app.use("/api/auth",authRoutes);   //Middleware
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
 
+app.use(express.static(path.join(__dirname,"/frontend/dist")));
+
+app.get("*",(req,res)=>{
+    res.sendFile(path.join(__dirname,"frontend","dist","index.html"))
+});
 
 // app.listen(port, ()=> 
 // {

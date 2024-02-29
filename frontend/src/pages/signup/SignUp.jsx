@@ -33,14 +33,14 @@ const SignUp = () => {
 	return (
 		<div className='flex flex-col items-center justify-center min-w-96 mx-auto'>
 			<div className='w-full p-6 rounded-lg shadow-md bg-gray-400 bg-clip-padding backdrop-filter backdrop-blur-lg bg-opacity-0'>
-				<h1 className='text-3xl font-semibold text-center text-gray-300'>
-					Sign Up <span className='text-blue-500'> ChatApp</span>
+				<h1 className='text-xl font-semibold text-center text-gray-300'>
+					Sign Up <span className='text-cyan-500'> Dialogue</span>
 				</h1>
 
 				<form onSubmit={handleSubmit}>
 					<div>
 						<label className='label p-2'>
-							<span className='text-base label-text text-gray-300'>Full Name</span>
+							<span className='text-base label-text text-gray-200'>Full Name</span>
 						</label>
 						<input 
 							type='text' 
@@ -53,11 +53,11 @@ const SignUp = () => {
 
 					<div>
 						<label className='label p-2 '>
-							<span className='text-base label-text text-gray-300 '>Username</span>
+							<span className='text-base label-text text-gray-200 '>Username</span>
 						</label>
 						<input 
 							type='text' 
-							placeholder='Unique username' 
+							placeholder='Username' 
 							className='input input-bordered input-info w-full max-w-xs' 
 							value={inputs.userName}
 							onChange={(e)=> setInputs({...inputs, userName: e.target.value })}
@@ -67,7 +67,7 @@ const SignUp = () => {
 
 					<div>
 						<label className='label'>
-							<span className='text-base label-text text-gray-300'>Password</span>
+							<span className='text-base label-text text-gray-200'>Password</span>
 						</label>
 						<input
 							type='password'
@@ -81,7 +81,7 @@ const SignUp = () => {
 
 					<div>
 						<label className='label'>
-							<span className='text-base label-text text-gray-300 '>Confirm Password</span>
+							<span className='text-base label-text text-gray-200'>Confirm Password</span>
 						</label>
 						<input
 							type='password'
@@ -95,7 +95,7 @@ const SignUp = () => {
 
 					<GenderCheckbox onCheckBoxChange = {handleCheckBoxChange} selectedGender={inputs.gender} />
 
-					<Link className='text-sm hover:underline hover:text-blue-600 mt-2 inline-block' to='/Login'>
+					<Link className='text-sm text-gray-300 hover:underline hover:text-cyan-600 mt-2 inline-block' to='/Login'>
 						Already have an account?
 					</Link>
 

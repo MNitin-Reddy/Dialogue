@@ -9,7 +9,7 @@ const generateTokenAndSetCookie = (userId, res) =>{
     //set token into a cookie
     //name can be anything cookie("name")
     res.cookie("jwt",token,{
-        //some options to amke it secure
+        //some options to make it secure
         maxAge: 15 * 24 * 60 * 60 * 1000, //In ms
         httpOnly: true, //Prevents XSS attacks
         sameSite:"strict", //CSFR atack croos-site request forgery attacks
